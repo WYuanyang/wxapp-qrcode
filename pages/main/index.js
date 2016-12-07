@@ -2,11 +2,6 @@
 var QR = require("../../utils/qrcode.js");
 Page({
   data:{
-    /*
-    官网说hidden只是简单的控制显示与隐藏，组件始终会被渲染，
-    但是将canvas转化成图片走的居然是fail，hidden为false就是成功的
-    所以这里手动控制显示隐藏canvas
-    */
     maskHidden:true,
     imagePath:'',
     placeholder:'baidu.com'
