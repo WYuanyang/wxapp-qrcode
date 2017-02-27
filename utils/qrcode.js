@@ -700,6 +700,9 @@ var QR = (function () {
             }
         return qrframe;
     }
+	
+	
+	
 
     var _canvas = null;
 
@@ -732,8 +735,30 @@ var QR = (function () {
         getFrame: function (string) {
             return genframe(string);
         },
+        //这里的utf16to8(str)是对Text中的字符串进行转码，让其支持中文
+		utf16to8:function(str) {
+		    var out, i, len, c;
+		
+		    out = "";
+		    len = str.length;
+		    for(i = 0; i < len; i++) {
+			c = str.charCodeAt(i);
+			if ((c >= 0x0001) && (c <= 0x007F)) {
+			    out += str.charAt(i);
+			} else if (c > 0x07FF) {
+			    out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
+			    out += String.fromCharCode(0x80 | ((c >>  6) & 0x3F));
+			    out += String.fromCharCode(0x80 | ((c >>  0) & 0x3F));
+			} else {
+			    out += String.fromCharCode(0xC0 | ((c >>  6) & 0x1F));
+			    out += String.fromCharCode(0x80 | ((c >>  0) & 0x3F));
+			}
+		    }
+		    return out;
+		},
 
-        draw: function (string, canvas, cavW, cavH, ecc) {
+        draw: function (str, canvas, cavW, cavH, ecc) {
+        	
             ecclevel = ecc || ecclevel;
             canvas = canvas || _canvas;
             if (!canvas) {
@@ -742,31 +767,24 @@ var QR = (function () {
             }
 
             var size =  Math.min(cavW, cavH);
-
-            var frame = this.getFrame(string),
-                ctx = wx.createContext(),
+			str = this.utf16to8(str);//增加中文显示
+			console.log(str)
+            var frame = this.getFrame(str),
+                ctx = wx.createCanvasContext(canvas),
                 px = Math.round(size / (width + 8));
-
             var roundedSize = px * (width + 8),
                 offset = Math.floor((size - roundedSize) / 2);
             size = roundedSize;
             ctx.clearRect(0, 0, cavW, cavW);
-            // ctx.setFillStyle('#ffffff');
-            // ctx.rect(0, 0, size, size);
             ctx.setFillStyle('#000000');
-			// ctx.setLineWidth(1);
             for (var i = 0; i < width; i++) {
                 for (var j = 0; j < width; j++) {
-                    if (frame[j * width + i]) {
-                        ctx.rect(px * (4 + i) + offset, px * (4 + j) + offset, px, px);
+                    if (frame[j * width + i]) {   
+                        ctx.fillRect(px * (4 + i) + offset, px * (4 + j) + offset, px, px);
 					}
                 }
             }
-            ctx.fill();
-			wx.drawCanvas({
-          		canvasId: canvas,
-          		actions: ctx.getActions()
-    		});
+			ctx.draw();
         }
     }
 	module.exports = {

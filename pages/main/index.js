@@ -4,12 +4,12 @@ Page({
   data:{
     maskHidden:true,
     imagePath:'',
-    placeholder:'baidu.com'
+    placeholder:'http://wxapp-union.com'
   },
   onLoad:function(options){
     // 页面初始化 options为页面跳转所带来的参数
     var size = this.setCanvasSize();//动态设置画布大小
-    var initUrl = "http://"+this.data.placeholder;
+    var initUrl = this.data.placeholder;
     this.createQrCode(initUrl,"mycanvas",size.w,size.h);
 
   },
@@ -62,7 +62,7 @@ Page({
       canvasId: 'mycanvas',
       success: function (res) {
           var tempFilePath = res.tempFilePath;
-          console.log(tempFilePath);
+          console.log("********"+tempFilePath);
           that.setData({
               imagePath:tempFilePath,
           });
@@ -74,7 +74,8 @@ Page({
   },
   //点击图片进行预览，长按保存分享图片
   previewImg:function(e){
-    var img = this.data.imagePath
+    var img = this.data.imagePath;
+    console.log(img);
     wx.previewImage({
       current: img, // 当前显示图片的http链接
       urls: [img] // 需要预览的图片http链接列表
@@ -83,7 +84,7 @@ Page({
   formSubmit: function(e) {
     var that = this;
     var url = e.detail.value.url;
-    url = url==''?('http://'+that.data.placeholder):('http://'+url);
+//  url = url==''?('http://'+that.data.placeholder):('http://'+url);
     that.setData({
       maskHidden:false,
     });
