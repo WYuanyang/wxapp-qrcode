@@ -17,6 +17,4 @@
     </form>
 </view>
 <view hidden="{{maskHidden}}" class="mask"></view>
-<view class="canvas-box">
-    
-</view>
+<view class="canvas-box"></view>

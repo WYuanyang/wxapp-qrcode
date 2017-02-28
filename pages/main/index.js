@@ -4,17 +4,18 @@ Page({
   data:{
     maskHidden:true,
     imagePath:'',
-    placeholder:'http://wxapp-union.com'
+    placeholder:'http://wxapp-union.com'//默认二维码生成文本
   },
   onLoad:function(options){
     // 页面初始化 options为页面跳转所带来的参数
-    var size = this.setCanvasSize();//动态设置画布大小
-    var initUrl = this.data.placeholder;
-    this.createQrCode(initUrl,"mycanvas",size.w,size.h);
+    
+    
 
   },
   onReady:function(){
-    
+  	var size = this.setCanvasSize();//动态设置画布大小
+    var initUrl = this.data.placeholder;
+    this.createQrCode(initUrl,"mycanvas",size.w,size.h);
   },
   onShow:function(){
     
@@ -47,13 +48,7 @@ Page({
   createQrCode:function(url,canvasId,cavW,cavH){
     //调用插件中的draw方法，绘制二维码图片
     QR.qrApi.draw(url,canvasId,cavW,cavH);
-    var that = this;
-    //二维码生成之后调用canvasToTempImage();延迟3s，否则获取图片路径为空
-    var st = setTimeout(function(){
-      that.canvasToTempImage();
-      clearTimeout(st);
-    },3000);
-    
+
   },
   //获取临时缓存照片路径，存入data中
   canvasToTempImage:function(){
@@ -74,17 +69,24 @@ Page({
   },
   //点击图片进行预览，长按保存分享图片
   previewImg:function(e){
-    var img = this.data.imagePath;
-    console.log(img);
-    wx.previewImage({
-      current: img, // 当前显示图片的http链接
-      urls: [img] // 需要预览的图片http链接列表
-    })
+    wx.canvasToTempFilePath({
+      canvasId: 'mycanvas',
+      success: function (res) {
+          var tempFilePath = res.tempFilePath;
+					wx.previewImage({
+      			current: tempFilePath, // 当前显示图片的http链接
+      			urls: [tempFilePath] // 需要预览的图片http链接列表
+    			})
+      },
+      fail: function (res) {
+          console.log(res);
+      }
+    });
+    
   },
   formSubmit: function(e) {
     var that = this;
     var url = e.detail.value.url;
-//  url = url==''?('http://'+that.data.placeholder):('http://'+url);
     that.setData({
       maskHidden:false,
     });
