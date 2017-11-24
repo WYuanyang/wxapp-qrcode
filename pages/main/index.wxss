@@ -18,3 +18,4 @@
 .input-row input{margin-left: 100rpx;flex: 1}
 .mybtn{width:686rpx;margin: 60rpx auto }
 .mask{position: fixed;top: 0;left: 0;z-index: 3; width: 100%;height: 100%;opacity: 0;}
+.canvas-box{position: fixed;top:999999rpx;left: 0}

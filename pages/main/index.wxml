@@ -1,8 +1,7 @@
 <!--pages/main/index.wxml-->
 <view class="container-box">
     <view class="img-box">
-        <canvas bindtap="previewImg" hidden="{{canvasHidden}}" style="width: 686rpx;height: 686rpx;background:#f1f1f1;" canvas-id="mycanvas"/>
-        <!--<image bindtap="previewImg" mode="scaleToFill" src="{{imagePath}}"></image>-->
+        <image bindtap="previewImg" mode="scaleToFill" src="{{imagePath}}"></image>
     </view>
     <form bindsubmit="formSubmit">
         <view class="input-row">
@@ -17,4 +16,6 @@
     </form>
 </view>
 <view hidden="{{maskHidden}}" class="mask"></view>
-<view class="canvas-box"></view>
+<view class="canvas-box">
+  <canvas  hidden="{{canvasHidden}}" style="width: 686rpx;height: 686rpx;background:#f1f1f1;" canvas-id="mycanvas"/>
+</view>
