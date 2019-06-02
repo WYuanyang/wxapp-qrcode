@@ -36,7 +36,7 @@ createQrCode: function (content, canvasId, cavW, cavH) {
   this.canvasToTempImage(canvasId);
 },
 
-//获取临时缓存照片路径，存入data中
+//获取临时缓存图片路径，存入data中
 canvasToTempImage: function (canvasId) {
   let that = this;
   wx.canvasToTempFilePath({
@@ -65,7 +65,7 @@ createQrCode ('wxapp-qrcode', 'mycanvas', 300, 300)
 
 ### 自定义组件中不能生成qrcode？
 
-封装方法时: 添加上this, QR.api.draw(url, canvasId, cavW, cavH, this); 可参考qrcode.js 768行，*[wx.createCanvasContext](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/wx.createCanvasContext.html)*
+封装方法时: 添加上this, `QR.api.draw(url, canvasId, cavW, cavH, this);` 可参考qrcode.js 768行，*[wx.createCanvasContext](https://developers.weixin.qq.com/miniprogram/dev/api/canvas/wx.createCanvasContext.html)*
 
 ### 如何适配不同屏幕大小的canvas？
 
