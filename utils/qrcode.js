@@ -18,10 +18,10 @@
 
   // final format bits with mask: level << 3 | mask
   var fmtword = [
-    0x77c4, 0x72f3, 0x7daa, 0x789d, 0x662f, 0x6318, 0x6c41, 0x6976,    //L
-    0x5412, 0x5125, 0x5e7c, 0x5b4b, 0x45f9, 0x40ce, 0x4f97, 0x4aa0,    //M
-    0x355f, 0x3068, 0x3f31, 0x3a06, 0x24b4, 0x2183, 0x2eda, 0x2bed,    //Q
-    0x1689, 0x13be, 0x1ce7, 0x19d0, 0x0762, 0x0255, 0x0d0c, 0x083b    //H
+    0x77c4, 0x72f3, 0x7daa, 0x789d, 0x662f, 0x6318, 0x6c41, 0x6976, //L
+    0x5412, 0x5125, 0x5e7c, 0x5b4b, 0x45f9, 0x40ce, 0x4f97, 0x4aa0, //M
+    0x355f, 0x3068, 0x3f31, 0x3a06, 0x24b4, 0x2183, 0x2eda, 0x2bed, //Q
+    0x1689, 0x13be, 0x1ce7, 0x19d0, 0x0762, 0x0255, 0x0d0c, 0x083b //H
   ];
 
   // 4 per version: number of blocks 1,2; data width; ecc width
@@ -110,7 +110,11 @@
 
   // Working buffers:
   // data input and ecc append, image working buffer, fixed part of image, run lengths for badness
-  var strinbuf = [], eccbuf = [], qrframe = [], framask = [], rlens = [];
+  var strinbuf = [],
+    eccbuf = [],
+    qrframe = [],
+    framask = [],
+    rlens = [];
   // Control values - width is based on version, last 4 are from table.
   var version, width, neccblk1, neccblk2, datablkw, eccblkwid;
   var ecclevel = 2;
@@ -171,7 +175,7 @@
       strinbuf[ecbuf + i] = 0;
     for (i = 0; i < dlen; i++) {
       fb = glog[strinbuf[data + i] ^ strinbuf[ecbuf]];
-      if (fb != 255)     /* fb term is non-zero */
+      if (fb != 255) /* fb term is non-zero */
         for (j = 1; j < eclen; j++)
           strinbuf[ecbuf + j - 1] = strinbuf[ecbuf + j] ^ gexp[modnn(fb + genpoly[eclen - j])];
       else
@@ -219,7 +223,7 @@
         break;
       case 2:
         for (y = 0; y < width; y++)
-          for (r3x = 0, x = 0; x < width; x++ , r3x++) {
+          for (r3x = 0, x = 0; x < width; x++, r3x++) {
             if (r3x == 3)
               r3x = 0;
             if (!r3x && !ismasked(x, y))
@@ -227,10 +231,10 @@
           }
         break;
       case 3:
-        for (r3y = 0, y = 0; y < width; y++ , r3y++) {
+        for (r3y = 0, y = 0; y < width; y++, r3y++) {
           if (r3y == 3)
             r3y = 0;
-          for (r3x = r3y, x = 0; x < width; x++ , r3x++) {
+          for (r3x = r3y, x = 0; x < width; x++, r3x++) {
             if (r3x == 3)
               r3x = 0;
             if (!r3x && !ismasked(x, y))
@@ -240,7 +244,7 @@
         break;
       case 4:
         for (y = 0; y < width; y++)
-          for (r3x = 0, r3y = ((y >> 1) & 1), x = 0; x < width; x++ , r3x++) {
+          for (r3x = 0, r3y = ((y >> 1) & 1), x = 0; x < width; x++, r3x++) {
             if (r3x == 3) {
               r3x = 0;
               r3y = !r3y;
@@ -250,10 +254,10 @@
           }
         break;
       case 5:
-        for (r3y = 0, y = 0; y < width; y++ , r3y++) {
+        for (r3y = 0, y = 0; y < width; y++, r3y++) {
           if (r3y == 3)
             r3y = 0;
-          for (r3x = 0, x = 0; x < width; x++ , r3x++) {
+          for (r3x = 0, x = 0; x < width; x++, r3x++) {
             if (r3x == 3)
               r3x = 0;
             if (!((x & y & 1) + !(!r3x | !r3y)) && !ismasked(x, y))
@@ -262,10 +266,10 @@
         }
         break;
       case 6:
-        for (r3y = 0, y = 0; y < width; y++ , r3y++) {
+        for (r3y = 0, y = 0; y < width; y++, r3y++) {
           if (r3y == 3)
             r3y = 0;
-          for (r3x = 0, x = 0; x < width; x++ , r3x++) {
+          for (r3x = 0, x = 0; x < width; x++, r3x++) {
             if (r3x == 3)
               r3x = 0;
             if (!(((x & y & 1) + (r3x && (r3x == r3y))) & 1) && !ismasked(x, y))
@@ -274,10 +278,10 @@
         }
         break;
       case 7:
-        for (r3y = 0, y = 0; y < width; y++ , r3y++) {
+        for (r3y = 0, y = 0; y < width; y++, r3y++) {
           if (r3y == 3)
             r3y = 0;
-          for (r3x = 0, x = 0; x < width; x++ , r3x++) {
+          for (r3x = 0, x = 0; x < width; x++, r3x++) {
             if (r3x == 3)
               r3x = 0;
             if (!(((r3x && (r3x == r3y)) + ((x + y) & 1)) & 1) && !ismasked(x, y))
@@ -290,7 +294,10 @@
   }
 
   // Badness coefficients.
-  var N1 = 3, N2 = 3, N3 = 40, N4 = 10;
+  var N1 = 3,
+    N2 = 3,
+    N3 = 40,
+    N4 = 10;
 
   // Using the table of the length of each run, calculate the amount of bad image 
   // - long runs or those that look like finders; called twice, once each for X and Y
@@ -302,14 +309,17 @@
         runsbad += N1 + rlens[i] - 5;
     // BwBBBwB as in finder
     for (i = 3; i < length - 1; i += 2)
-      if (rlens[i - 2] == rlens[i + 2]
-        && rlens[i + 2] == rlens[i - 1]
-        && rlens[i - 1] == rlens[i + 1]
-        && rlens[i - 1] * 3 == rlens[i]
+      if (rlens[i - 2] == rlens[i + 2] &&
+        rlens[i + 2] == rlens[i - 1] &&
+        rlens[i - 1] == rlens[i + 1] &&
+        rlens[i - 1] * 3 == rlens[i]
         // white around the black pattern? Not part of spec
-        && (rlens[i - 3] == 0 // beginning
-          || i + 3 > length  // end
-          || rlens[i - 3] * 3 >= rlens[i] * 4 || rlens[i + 3] * 3 >= rlens[i] * 4)
+        &&
+        (rlens[i - 3] == 0 // beginning
+          ||
+          i + 3 > length // end
+          ||
+          rlens[i - 3] * 3 >= rlens[i] * 4 || rlens[i + 3] * 3 >= rlens[i] * 4)
       )
         runsbad += N3;
     return runsbad;
@@ -324,10 +334,11 @@
     // blocks of same color.
     for (y = 0; y < width - 1; y++)
       for (x = 0; x < width - 1; x++)
-        if ((qrframe[x + width * y] && qrframe[(x + 1) + width * y]
-          && qrframe[x + width * (y + 1)] && qrframe[(x + 1) + width * (y + 1)]) // all black
-          || !(qrframe[x + width * y] || qrframe[(x + 1) + width * y]
-            || qrframe[x + width * (y + 1)] || qrframe[(x + 1) + width * (y + 1)])) // all white
+        if ((qrframe[x + width * y] && qrframe[(x + 1) + width * y] &&
+            qrframe[x + width * (y + 1)] && qrframe[(x + 1) + width * (y + 1)]) // all black
+          ||
+          !(qrframe[x + width * y] || qrframe[(x + 1) + width * y] ||
+            qrframe[x + width * (y + 1)] || qrframe[(x + 1) + width * (y + 1)])) // all white
           thisbad += N2;
 
     // X runs
@@ -437,7 +448,7 @@
     if (version > 1) {
       t = adelta[version];
       y = width - 7;
-      for (; ;) {
+      for (;;) {
         x = width - 7;
         while (x > t - 3) {
           putalign(x, y);
@@ -484,25 +495,25 @@
         setmask(8 + x, 6);
         setmask(6, 8 + x);
       }
-      else {
-        qrframe[(8 + x) + width * 6] = 1;
-        qrframe[6 + width * (8 + x)] = 1;
-      }
+    else {
+      qrframe[(8 + x) + width * 6] = 1;
+      qrframe[6 + width * (8 + x)] = 1;
+    }
 
     // version block
     if (version > 6) {
       t = vpat[version - 7];
       k = 17;
       for (x = 0; x < 6; x++)
-        for (y = 0; y < 3; y++ , k--)
+        for (y = 0; y < 3; y++, k--)
           if (1 & (k > 11 ? version >> (k - 12) : t >> k)) {
             qrframe[(5 - x) + width * (2 - y + width - 11)] = 1;
             qrframe[(2 - y + width - 11) + width * (5 - x)] = 1;
           }
-          else {
-            setmask(5 - x, 2 - y + width - 11);
-            setmask(2 - y + width - 11, 5 - x);
-          }
+      else {
+        setmask(5 - x, 2 - y + width - 11);
+        setmask(2 - y + width - 11, 5 - x);
+      }
     }
 
     // sync mask bits - only set above for white spaces, so add in black bits
@@ -541,8 +552,7 @@
       strinbuf[2] |= 255 & (v << 4);
       strinbuf[1] = v >> 4;
       strinbuf[0] = 0x40 | (v >> 12);
-    }
-    else {
+    } else {
       strinbuf[i + 1] = 0;
       strinbuf[i + 2] = 0;
       while (i--) {
@@ -568,8 +578,8 @@
     for (i = 0; i < eccblkwid; i++) {
       genpoly[i + 1] = 1;
       for (j = i; j > 0; j--)
-        genpoly[j] = genpoly[j]
-          ? genpoly[j - 1] ^ gexp[modnn(glog[genpoly[j]] + i)] : genpoly[j - 1];
+        genpoly[j] = genpoly[j] ?
+        genpoly[j - 1] ^ gexp[modnn(glog[genpoly[j]] + i)] : genpoly[j - 1];
       genpoly[0] = gexp[modnn(glog[genpoly[0]] + i)];
     }
     for (i = 0; i <= eccblkwid; i++)
@@ -605,15 +615,15 @@
 
     // pack bits into frame avoiding masked area.
     x = y = width - 1;
-    k = v = 1;         // up, minus
+    k = v = 1; // up, minus
     /* inteleaved data and ecc codes */
     m = (datablkw + eccblkwid) * (neccblk1 + neccblk2) + neccblk2;
     for (i = 0; i < m; i++) {
       t = strinbuf[i];
-      for (j = 0; j < 8; j++ , t <<= 1) {
+      for (j = 0; j < 8; j++, t <<= 1) {
         if (0x80 & t)
           qrframe[x + width * y] = 1;
-        do {        // find next fill position
+        do { // find next fill position
           if (v)
             x--;
           else {
@@ -629,8 +639,7 @@
                   y = 9;
                 }
               }
-            }
-            else {
+            } else {
               if (y != width - 1)
                 y++;
               else {
@@ -650,29 +659,29 @@
 
     // save pre-mask copy of frame
     strinbuf = qrframe.slice(0);
-    t = 0;           // best
-    y = 30000;         // demerit
+    t = 0; // best
+    y = 30000; // demerit
     // for instead of while since in original arduino code
     // if an early mask was "good enough" it wouldn't try for a better one
     // since they get more complex and take longer.
     for (k = 0; k < 8; k++) {
-      applymask(k);      // returns black-white imbalance
+      applymask(k); // returns black-white imbalance
       x = badcheck();
       if (x < y) { // current mask better than previous best?
         y = x;
         t = k;
       }
       if (t == 7)
-        break;       // don't increment i to a void redoing mask
+        break; // don't increment i to a void redoing mask
       qrframe = strinbuf.slice(0); // reset for next pass
     }
-    if (t != k)         // redo best mask - none good enough, last wasn't t
+    if (t != k) // redo best mask - none good enough, last wasn't t
       applymask(t);
 
     // add in final mask/ecclevel bytes
     y = fmtword[t + ((ecclevel - 1) << 3)];
     // low byte
-    for (k = 0; k < 8; k++ , y >>= 1)
+    for (k = 0; k < 8; k++, y >>= 1)
       if (y & 1) {
         qrframe[(width - 1 - k) + width * 8] = 1;
         if (k < 6)
@@ -681,7 +690,7 @@
           qrframe[8 + width * (k + 1)] = 1;
       }
     // high byte
-    for (k = 0; k < 7; k++ , y >>= 1)
+    for (k = 0; k < 7; k++, y >>= 1)
       if (y & 1) {
         qrframe[8 + width * (width - 7 + k)] = 1;
         if (k)
@@ -749,8 +758,8 @@
     },
     /**
      * 新增$this参数，传入组件的this,兼容在组件中生成
-     */ 
-    draw: function (str, canvas, cavW, cavH, $this, ecc) {
+     */
+    draw: function (str, canvas, cavW, cavH, $this, cb = function () {}, ecc) {
       var that = this;
       ecclevel = ecc || ecclevel;
       canvas = canvas || _canvas;
@@ -760,11 +769,11 @@
       }
 
       var size = Math.min(cavW, cavH);
-      str = that.utf16to8(str);//增加中文显示
+      str = that.utf16to8(str); //增加中文显示
 
       var frame = that.getFrame(str),
         // 组件中生成qrcode需要绑定this 
-        ctx = wx.createCanvasContext(canvas,$this),
+        ctx = wx.createCanvasContext(canvas, $this),
         px = Math.round(size / (width + 8));
       var roundedSize = px * (width + 8),
         offset = Math.floor((size - roundedSize) / 2);
@@ -780,10 +789,14 @@
           }
         }
       }
-      ctx.draw();
+      //--增加绘制完成回调
+      ctx.draw(false, function () {
+        cb();
+      })
+
     }
   }
-  module.exports = { api }
-  // exports.draw = api;
-
+  module.exports = {
+    api
+  }
 })();
